@@ -60,8 +60,6 @@ public class TestFragment1 extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        Toast.makeText(getContext(), "Fragment 1 has been created", Toast.LENGTH_LONG).show();
-
     }
 
     @Override

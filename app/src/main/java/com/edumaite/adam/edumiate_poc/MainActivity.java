@@ -1,11 +1,11 @@
 package com.edumaite.adam.edumiate_poc;
-
-import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,11 +14,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import junit.framework.Test;
+import com.edumaite.adam.edumiate_poc.receivers.NetworkChangeReceiver;
+
 
 public class MainActivity extends AppCompatActivity
         implements TestFragment2.OnFragmentInteractionListener,
@@ -26,6 +25,8 @@ public class MainActivity extends AppCompatActivity
 
     private Context context;
     private DrawerLayout mDrawerLayout;
+    private BroadcastReceiver mNetworkReceiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.bot);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -88,10 +90,13 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        context=this;
-        isInternetOn();
-    }
+        context = this;
 
+        mNetworkReceiver = new NetworkChangeReceiver(new Handler());
+        registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+
+    }
 
 
     @Override
@@ -104,44 +109,25 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean isInternetOn() {
 
-        Log.i("Adam", "isInternetOn currently running");
-        // get Connectivity Manager object to check connection
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        Log.i("Adam", "Connectivity manager intialised");
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null) {
-            Log.i("Adam", "Device is connected to the network");
-            Toast.makeText(context, "Device is connected to the network", Toast.LENGTH_LONG).show();
-            switch (activeNetwork.getType()) {
-                case ConnectivityManager.TYPE_WIFI:
-                    Log.i("Adam", "Device is connected to the wifi");
-                    Toast.makeText(context, "Device is connected to the wifi", Toast.LENGTH_LONG).show();
-                    // connected to wifi
-                    break;
-                case ConnectivityManager.TYPE_MOBILE:
-                    // connected to mobile data
-                    Log.i("Adam", "Device is using mobile data");
-                    Toast.makeText(context, "Device is using mobile data", Toast.LENGTH_LONG).show();
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        } else {
-            Log.i("Adam", "Device is not connected to the network");
-            Toast.makeText(context, "Device is not connected to the network", Toast.LENGTH_LONG).show();
-            return false;
-        }
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(mNetworkReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkChanges();
     }
 
 }

@@ -22,13 +22,6 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-        <!--<ImageView-->
-            <!--android:id="@+id/imageView"-->
-            <!--android:layout_width="168dp"-->
-            <!--android:layout_height="116dp"-->
-            <!--android:layout_gravity="center"-->
-            <!--app:srcCompat="@drawable/edumaite_logo" />-->
-
     </FrameLayout>
 
 
