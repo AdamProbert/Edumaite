@@ -1,18 +1,27 @@
 package com.edumaite.adam.edumiate_poc.receivers;
 
+import android.app.ActivityManager;
+import android.app.usage.UsageEvents;
+import android.app.usage.UsageStatsManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    private final Handler handler;
+    private Handler handler = null;
 
+    public NetworkChangeReceiver(){
+
+    }
     public NetworkChangeReceiver(Handler handler){
         this.handler = handler;
     }
@@ -23,6 +32,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         try
         {
             final String onlineInfo = isInternetOn(context);
+            whatAppIsRunning(context);
             if (onlineInfo != null) {
                 Log.i("Adam", onlineInfo);
                 handler.post(new Runnable() {
@@ -43,6 +53,21 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+    }
+
+    // This only works within my app! Fuck.
+    public void whatAppIsRunning(Context context) {
+
+        Log.i("Adam", "System service detecting");
+        ActivityManager activityManager = (ActivityManager) context.getSystemService( Context.ACTIVITY_SERVICE );
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        for(ActivityManager.RunningAppProcessInfo appProcess : appProcesses){
+            Log.i("Adam", "Current foreground process: " +appProcess.processName);
+            Toast.makeText(context, "Current foreground process: " +appProcess.processName, Toast.LENGTH_LONG).show();
+
+        }
+        Log.i("Adam", "System service done");
+
     }
 
     public String isInternetOn(Context context) {
