@@ -5,7 +5,6 @@ import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,7 +16,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -33,22 +31,25 @@ import android.widget.Toast;
 
 import com.edumaite.adam.edumiate_poc.receivers.NetworkChangeReceiver;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
 
-public class MainActivity extends AppCompatActivity
-        implements TestFragment2.OnFragmentInteractionListener,
-        TestFragment1.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements
+        TestFragment2.OnFragmentInteractionListener,
+        TestFragment1.OnFragmentInteractionListener,
+        FToggleFragment.OnFragmentInteractionListener {
 
     private Context context;
     private DrawerLayout mDrawerLayout;
+
+    // Network change receiver
     private BroadcastReceiver mNetworkReceiver;
-    private Handler mHandler = null;
-    private HandlerThread mHandlerThread = null;
+
+    // Timer for blacklisted app checking
+    private Timer timer;
+    private TimerTask timerTask;
+    private Handler handler = new Handler();
 
 
     @Override
@@ -57,12 +58,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Edumaite");
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();
 
         Fragment fragment = null;
-        Class fragmentClass = null;
+        Class fragmentClass;
         fragmentClass = TestFragment1.class;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -95,6 +97,8 @@ public class MainActivity extends AppCompatActivity
                             fragmentClass = TestFragment1.class;
                         } else if (id == R.id.yoda) {
                             fragmentClass = TestFragment2.class;
+                        } else if (id == R.id.vader) {
+                            fragmentClass = FToggleFragment.class;
                         } else {
                             return true;
                         }
@@ -115,36 +119,27 @@ public class MainActivity extends AppCompatActivity
 
         context = this;
 
+        // Initialise network receiver
         mNetworkReceiver = new NetworkChangeReceiver(new Handler());
         registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
+        // Initialise foreground app checker
+        startTimer(context);
+
+    }
+
+    private List<ResolveInfo> getInstalledApps(){
         Log.i("Adam", "Collecting installed apps");
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+
         List<ResolveInfo> pkgAppsList = context.getPackageManager().queryIntentActivities( mainIntent, 0);
-        for(ResolveInfo app:pkgAppsList)
-        {
-            Log.i("Adam", "App: " +app.toString());
-        }
+//        for(ResolveInfo app:pkgAppsList)
+//        {
+//            Log.i("Adam", "App: " +app.toString());
+//        }
         Log.i("Adam", "Collected installed apps");
-
-        // Start handler thread for detecting current foreground app
-        startTimer(context);
-    }
-
-
-
-    // Time testing for running in background
-    private Timer timer;
-    private TimerTask timerTask;
-    private Handler handler = new Handler();
-
-    //To stop timer
-    private void stopTimer(){
-        if(timer != null){
-            timer.cancel();
-            timer.purge();
-        }
+        return pkgAppsList;
     }
 
     //To start timer
@@ -153,15 +148,23 @@ public class MainActivity extends AppCompatActivity
         timerTask = new TimerTask() {
             public void run() {
                 handler.post(new Runnable() {
-                    public void run(){
+                    public void run() {
                         String foregroundapp = getForegroundAppName(context);
-                        Log.i("Adam","Current foreground app: " +foregroundapp);
-                        Toast.makeText(context, "Current foreground app: " +foregroundapp, Toast.LENGTH_SHORT).show();
+                        Log.i("Adam", "Current foreground app: " + foregroundapp);
+                        //Toast.makeText(context, "Current foreground app: " + foregroundapp, Toast.LENGTH_SHORT).show();
+                        if(foregroundapp.equals("com.google.android.googlequicksearchbox")){
+                            Log.i("Adam", "blacklisted app has been caught!");
+                            Intent intent = new Intent(context, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                            startActivity(intent);
+                            Log.i("Adam", "Activity should have relaunched!");
+
+                        }
                     }
                 });
             }
         };
-        timer.schedule(timerTask, 5000, 5000);
+        timer.schedule(timerTask, 3000, 3000);
     }
 
     private void createHandler() {
@@ -213,8 +216,6 @@ public class MainActivity extends AppCompatActivity
                 Log.e(tag, "Need to Turn on Settings->Security->[Apps with usage access]");
             }
 
-            // intentionally using string value as Context.USAGE_STATS_SERVICE was
-            // strangely only added in API 22 (LOLLIPOP_MR1)
             @SuppressWarnings("WrongConstant")
             UsageStatsManager usm = (UsageStatsManager) context.getSystemService("usagestats");
             long now = System.currentTimeMillis();
@@ -241,7 +242,6 @@ public class MainActivity extends AppCompatActivity
         }
         return "";
     }
-
 
 
     @Override

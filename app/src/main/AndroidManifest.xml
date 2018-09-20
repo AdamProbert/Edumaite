@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
-        <activity android:name=".MainActivity">
+        <activity android:name="com.edumaite.adam.edumiate_poc.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,6 +29,10 @@
         <receiver android:name=".receivers.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ProcessTimerReceiver" >
+                </action>
             </intent-filter>
         </receiver>
 
