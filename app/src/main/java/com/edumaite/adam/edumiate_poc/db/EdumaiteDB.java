@@ -1,14 +1,19 @@
 package com.edumaite.adam.edumiate_poc.db;
 
+import android.app.Activity;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.edumaite.adam.edumiate_poc.dataCollection.AppCollector;
 import com.edumaite.adam.edumiate_poc.models.App;
+
+import java.util.List;
 
 @Database(entities = {App.class}, version = 1, exportSchema = false)
 public abstract class EdumaiteDB extends RoomDatabase{
@@ -50,13 +55,15 @@ public abstract class EdumaiteDB extends RoomDatabase{
             mAppDao = db.appDao();
         }
 
+
+        // Initialise database
         @Override
         protected Void doInBackground(final Void... params) {
-            mAppDao.deleteAll();
-            App app = new App("Facebook", "Image");
-            mAppDao.insert(app);
-            app = new App("Youtube", "Image");
-            mAppDao.insert(app);
+//            mAppDao.deleteAll();
+//            App app = new App("Facebook", "Image");
+//            mAppDao.insert(app);
+//            app = new App("Youtube", "Image");
+//            mAppDao.insert(app);
             return null;
         }
     }

@@ -14,7 +14,7 @@ public class EdumaiteRepository {
     private AppDao myAppDao;
     private LiveData<List<App>> myAllApps;
 
-    EdumaiteRepository(Application application){
+    public EdumaiteRepository(Application application){
         EdumaiteDB db = EdumaiteDB.getDatabase(application);
         myAppDao = db.appDao();
         myAllApps = myAppDao.getAllApps();

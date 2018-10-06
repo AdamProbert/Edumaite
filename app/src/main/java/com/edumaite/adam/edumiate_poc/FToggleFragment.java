@@ -73,12 +73,7 @@ public class FToggleFragment extends Fragment implements AdapterView.OnItemClick
         recyclerView.setAdapter(mAppAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //List<ResolveInfo> apps = new AppCollector(getContext()).getInstalledApps();
         mAppViewModel = ViewModelProviders.of(this).get(AppViewModel.class);
-
-
-        App mApp = new App("Test app", "test image");
-        mAppViewModel.insert(mApp);
 
 
         mAppViewModel.getAllApps().observe(this, new Observer<List<App>>() {

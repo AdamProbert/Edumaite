@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
+import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.edumaite.adam.edumiate_poc.dataCollection.AppCollector;
+import com.edumaite.adam.edumiate_poc.db.AppDao;
+import com.edumaite.adam.edumiate_poc.db.AppViewModel;
+import com.edumaite.adam.edumiate_poc.db.EdumaiteDB;
+import com.edumaite.adam.edumiate_poc.db.EdumaiteRepository;
+import com.edumaite.adam.edumiate_poc.models.App;
 import com.edumaite.adam.edumiate_poc.receivers.NetworkChangeReceiver;
 
 import java.util.List;
@@ -118,6 +125,18 @@ public class MainActivity extends AppCompatActivity implements
                 });
 
         context = this;
+
+        //Initialise DB with installed apps
+        List<App> apps = new AppCollector(context).getInstalledApps();
+//        EdumaiteDB db = Room.databaseBuilder(this, EdumaiteDB.class, "edumaite_db")
+//                .build();
+//
+
+        AppViewModel avm = new AppViewModel(getApplication());
+        for(App app: apps) {
+            avm.insert(app);
+
+        }
 
         // Initialise network receiver
         mNetworkReceiver = new NetworkChangeReceiver(new Handler());
