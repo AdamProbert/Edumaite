@@ -128,20 +128,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private List<ResolveInfo> getInstalledApps(){
-        Log.i("Adam", "Collecting installed apps");
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        List<ResolveInfo> pkgAppsList = context.getPackageManager().queryIntentActivities( mainIntent, 0);
-//        for(ResolveInfo app:pkgAppsList)
-//        {
-//            Log.i("Adam", "App: " +app.toString());
-//        }
-        Log.i("Adam", "Collected installed apps");
-        return pkgAppsList;
-    }
-
     //To start timer
     private void startTimer(final Context context){
         timer = new Timer();

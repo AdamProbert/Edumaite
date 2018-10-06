@@ -3,4 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#37393d</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="buttonLabel">#d3d3d3</color>
+
 </resources>
