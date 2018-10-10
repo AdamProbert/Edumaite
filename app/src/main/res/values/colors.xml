@@ -3,8 +3,8 @@
     <color name="colorPrimary">@color/DodgerBlue</color>
     <color name="colorPrimaryDark">#3A72FF</color>
     <color name="colorAccent">@color/SteelBlue</color>
-    <color name="buttonLabel">#d3d3d3</color>
-    <color name="textPrimary">#d3d3d3</color>
+    <color name="buttonLabel">#ffffff</color>
+    <color name="textPrimary">#ffffff</color>
 
 
     <color name="White">#FFFFFF</color>
