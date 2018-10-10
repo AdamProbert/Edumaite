@@ -1,35 +1,31 @@
 package com.edumaite.adam.edumiate_poc;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.edumaite.adam.edumiate_poc.adapters.AppAdapter;
-import com.edumaite.adam.edumiate_poc.dataCollection.AppCollector;
+import com.edumaite.adam.edumiate_poc.adapters.RecyclerItemClickListener;
 import com.edumaite.adam.edumiate_poc.db.AppViewModel;
 import com.edumaite.adam.edumiate_poc.models.App;
 
 import java.util.List;
+import java.util.Objects;
 
 
-public class FToggleFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class FToggleFragment extends Fragment{
 
     private OnFragmentInteractionListener mListener;
     private AppViewModel mAppViewModel;
@@ -49,10 +45,7 @@ public class FToggleFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(),
-//                R.array.Planets, android.R.layout.simple_list_item_1);
-//        setListAdapter(adapter);
-//        getListView().setOnItemClickListener(this);
+
     }
 
 
@@ -69,9 +62,14 @@ public class FToggleFragment extends Fragment implements AdapterView.OnItemClick
         View fragView = inflater.inflate(R.layout.toggle_fragment, container, false);
 
         RecyclerView recyclerView = fragView.findViewById(R.id.recyclerview);
-        final AppAdapter mAppAdapter = new AppAdapter(getContext());
+        mAppAdapter = new AppAdapter(getContext());
         recyclerView.setAdapter(mAppAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Add line decorator between each item
+        DividerItemDecoration itemDecorator = new DividerItemDecoration(Objects.requireNonNull(getContext()), DividerItemDecoration.VERTICAL);
+        itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.divider)));
+        recyclerView.addItemDecoration(itemDecorator);
 
         mAppViewModel = ViewModelProviders.of(this).get(AppViewModel.class);
 
@@ -86,13 +84,6 @@ public class FToggleFragment extends Fragment implements AdapterView.OnItemClick
 
 
         return fragView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -110,12 +101,6 @@ public class FToggleFragment extends Fragment implements AdapterView.OnItemClick
     public void onDetach() {
         super.onDetach();
 //        mListener = null;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
-
     }
 
     public interface OnFragmentInteractionListener {

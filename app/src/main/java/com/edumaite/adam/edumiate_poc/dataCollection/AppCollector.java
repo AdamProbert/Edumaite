@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.edumaite.adam.edumiate_poc.models.App;
@@ -41,10 +43,13 @@ public class AppCollector {
                 continue;
             }
 
+
             Log.i("InstalledApp", "App icon resource: " +app.getIconResource());
+            Log.i("InstalledApp", "App packageName: " +app.activityInfo.packageName);
+
             Log.i("InstalledApp", "------------------------------------------------------------------------");
 
-            resolvedApps.add(new App(appName, "image"));
+            resolvedApps.add(new App(appName, "image", app.activityInfo.packageName));
         }
         Log.i("Adam", "Collected installed AppCollector");
         return resolvedApps;

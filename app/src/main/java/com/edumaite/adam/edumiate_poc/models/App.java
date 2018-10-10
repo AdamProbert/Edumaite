@@ -11,11 +11,14 @@ public class App {
     @NonNull
     public String name;
     public String image;
+    public String packageName;
 
-    public App(String name, String image) {
+    public App(String name, String image, String packageName) {
         this.name = name;
         this.image = image;
+        this.packageName = packageName;
     }
 
     public String getApp(){return this.name;}
+    public String getAppPackage(){return this.packageName;}
 }
