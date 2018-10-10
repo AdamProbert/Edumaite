@@ -16,5 +16,12 @@
         <item name="android:paddingLeft">8dp</item>
     </style>
 
+    <style name="AppSwitch" parent="Theme.AppCompat.Light">
+
+        <item name="colorControlHighlight">@color/Red</item>
+        <item name="colorSwitchThumbNormal">@color/LimeGreen</item>
+        <item name="colorControlNormal">@color/White</item>
+        <item name="colorControlActivated">@color/Red</item>
+    </style>
 
 </resources>

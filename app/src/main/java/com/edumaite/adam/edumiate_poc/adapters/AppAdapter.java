@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     class AppViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView wordItemView;
-        private final Switch appToggle;
+        private final SwitchCompat appToggle;
         private final ImageView appImage;
 
 

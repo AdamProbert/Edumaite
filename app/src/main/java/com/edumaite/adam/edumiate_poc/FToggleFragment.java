@@ -66,13 +66,7 @@ public class FToggleFragment extends Fragment{
         recyclerView.setAdapter(mAppAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Add line decorator between each item
-        DividerItemDecoration itemDecorator = new DividerItemDecoration(Objects.requireNonNull(getContext()), DividerItemDecoration.VERTICAL);
-        itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.divider)));
-        recyclerView.addItemDecoration(itemDecorator);
-
         mAppViewModel = ViewModelProviders.of(this).get(AppViewModel.class);
-
 
         mAppViewModel.getAllApps().observe(this, new Observer<List<App>>() {
             @Override
