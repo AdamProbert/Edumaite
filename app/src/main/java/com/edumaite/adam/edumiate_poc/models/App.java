@@ -12,11 +12,21 @@ public class App {
     public String name;
     public String image;
     public String packageName;
+    public boolean blacklisted;
 
     public App(String name, String image, String packageName) {
         this.name = name;
         this.image = image;
         this.packageName = packageName;
+        this.blacklisted = false; // Start all apps whitelisted
+    }
+
+    public void setBlacklisted(Boolean blacklisted){
+        this.blacklisted = blacklisted;
+    }
+
+    public boolean getBlacklisted(){
+        return this.blacklisted;
     }
 
     public String getApp(){return this.name;}

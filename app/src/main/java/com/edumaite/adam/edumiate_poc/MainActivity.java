@@ -25,6 +25,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -126,17 +128,36 @@ public class MainActivity extends AppCompatActivity implements
 
         context = this;
 
+        // Try something like this to speed it up: https://virtuooza.com/add-data-to-sqlite-room-and-display-it-into-recyclerview/
+//        Runnable r = new Runnable(){
+//            @Override
+//            public void run() {
+//                items = db.databaseInterface().getAllItems();
+//                recyclerView= (RecyclerView)findViewById(R.id.recyclerview);
+//                recyclerView.setLayoutManager(new LinearLayoutManager(getApplication()));
+//                adapter= new UserAdapter(items);
+//                adapter.notifyDataSetChanged();
+//                recyclerView.setAdapter(adapter);
+//
+//            }
+//        };
+//
+//        Thread newThread= new Thread(r);
+//        newThread.start();
+
+
         //Initialise DB with installed apps
-        List<App> apps = new AppCollector(context).getInstalledApps();
+        // This needs to only be run once! As it will overwrite the previous entries!
+//        List<App> apps = new AppCollector(context).getInstalledApps();
 //        EdumaiteDB db = Room.databaseBuilder(this, EdumaiteDB.class, "edumaite_db")
 //                .build();
 //
-
-        AppViewModel avm = new AppViewModel(getApplication());
-        for(App app: apps) {
-            avm.insert(app);
-
-        }
+//
+//        AppViewModel avm = new AppViewModel(getApplication());
+//        for(App app: apps) {
+//            avm.insert(app);
+//
+//        }
 
         // Initialise network receiver
         mNetworkReceiver = new NetworkChangeReceiver(new Handler());

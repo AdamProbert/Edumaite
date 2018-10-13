@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.edumaite.adam.edumiate_poc.R;
+import com.edumaite.adam.edumiate_poc.db.AppViewModel;
 import com.edumaite.adam.edumiate_poc.models.App;
 
 import java.util.List;
@@ -24,10 +24,17 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     Context context;
     private final LayoutInflater mInflater;
     private List<App> mApps; // Cached copy of words
+    public AppViewModel mAppViewModel;
 
-    public AppAdapter(Context context) {
+    public AppAdapter(Context context, AppViewModel mAppViewModel) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
+        this.mAppViewModel = mAppViewModel;
+
+    }
+
+    public interface ICheckChangeListener {
+        void onItemChecked(int position, boolean value);
     }
 
     class AppViewHolder extends RecyclerView.ViewHolder {
@@ -35,6 +42,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
         private final TextView wordItemView;
         private final SwitchCompat appToggle;
         private final ImageView appImage;
+        private ICheckChangeListener iCheckChangeListener;
 
 
         private AppViewHolder(View itemView) {
@@ -42,11 +50,25 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
             appImage = itemView.findViewById(R.id.app_icon);
             appToggle = itemView.findViewById(R.id.app_switch);
             wordItemView = itemView.findViewById(R.id.app_name);
+
+            appToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Log.i("adam", "onCheckChanged call. Vars: " + buttonView + ", " +isChecked);
+                    if(iCheckChangeListener != null){
+                        iCheckChangeListener.onItemChecked(getAdapterPosition(), isChecked);
+                    }
+
+
+                }
+            });
         }
+
+        void setICheckChangeListener(ICheckChangeListener iCheckChangeListener) {
+            this.iCheckChangeListener = iCheckChangeListener;
+        }
+
     }
-
-
-
 
 
     @Override
@@ -58,9 +80,13 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
 
     @Override
     public void onBindViewHolder(AppViewHolder holder, int position) {
+        App current = mApps.get(position);
         if (mApps != null) {
-            App current = mApps.get(position);
             holder.wordItemView.setText(current.getApp());
+
+            // Set blacklisted for app
+            holder.appToggle.setChecked(current.blacklisted);
+
 
             try {
                 Drawable appIcon = context.getPackageManager().getApplicationIcon(current.getAppPackage());
@@ -76,22 +102,38 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
             holder.wordItemView.setText("No Apps");
         }
 
-        holder.appToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.setICheckChangeListener(new ICheckChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked) {
-                    Log.i("adam", "toggle has been checked");
-                } else {
-                    Log.i("adam", "toggle has been unchecked");
-
-                }
+            public void onItemChecked(int position, boolean value) {
+                mApps.get(position).setBlacklisted(value);
+                mAppViewModel.insert(mApps.get(position));
             }
         });
+
+
+//        holder.appToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//                if (isChecked) {
+//                    Log.i("adam", "toggle has been checked");
+//                    current.setBlacklisted(true);
+////                    EdumaiteRepository er = new EdumaiteRepository(parentApp).insert(current);
+//
+//                } else {
+//                    Log.i("adam", "toggle has been unchecked");
+//                    current.setBlacklisted(false);
+//
+//                }
+//
+//                //current.
+//
+//            }
+//        });
     }
 
     public void setApps(List<App> apps){
-        Log.i("adam", "SetApps called form AppAdapter");
+        Log.i("adam", "SetApps called from AppAdapter");
         mApps = apps;
         notifyDataSetChanged();
     }
@@ -105,9 +147,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
         else return 0;
     }
 
-    public void app_toggle_handler(View v)
-    {
-        Log.i("adam", "app toggle handler called");
+    public List<App> getApps(){
+        return mApps;
     }
+
 
 }

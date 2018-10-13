@@ -3,6 +3,7 @@ package com.edumaite.adam.edumiate_poc.db;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 
 import com.edumaite.adam.edumiate_poc.models.App;
 
@@ -23,4 +24,5 @@ public class AppViewModel extends AndroidViewModel {
     public LiveData<List<App>> getAllApps() { return mAllApps; }
 
     public void insert(App app) { mRepository.insert(app); }
+
 }

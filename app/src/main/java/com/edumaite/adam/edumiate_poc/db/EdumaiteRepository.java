@@ -10,7 +10,6 @@ import java.util.List;
 
 public class EdumaiteRepository {
 
-
     private AppDao myAppDao;
     private LiveData<List<App>> myAllApps;
 
@@ -44,8 +43,3 @@ public class EdumaiteRepository {
         }
     }
 }
-
-
-
-
-
