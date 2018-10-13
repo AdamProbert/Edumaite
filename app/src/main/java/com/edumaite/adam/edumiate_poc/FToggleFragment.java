@@ -24,6 +24,7 @@ import com.edumaite.adam.edumiate_poc.adapters.RecyclerItemClickListener;
 import com.edumaite.adam.edumiate_poc.db.AppViewModel;
 import com.edumaite.adam.edumiate_poc.models.App;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -82,6 +83,7 @@ public class FToggleFragment extends Fragment{
         mAppViewModel.getAllApps().observe(this, new Observer<List<App>>() {
             @Override
             public void onChanged(@Nullable final List<App> apps) {
+                Log.i("adam", "ToggleFragment on changed called");
                 // Update the cached copy of the words in the adapter.
                 mAppAdapter.setApps(apps);
 
@@ -113,6 +115,17 @@ public class FToggleFragment extends Fragment{
 
         }
         mAppAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i("adam", "togglefragment.onSaveInstanceState called");
+        List<App> apps2 = mAppAdapter.getApps();
+        for(App app: apps2) {
+            mAppViewModel.insert(app);
+
+        }
     }
 
     public interface OnFragmentInteractionListener {

@@ -298,6 +298,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getSupportFragmentManager().popBackStack();
         unregisterNetworkChanges();
     }
 

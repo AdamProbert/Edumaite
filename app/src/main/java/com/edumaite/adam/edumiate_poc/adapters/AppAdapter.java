@@ -105,31 +105,12 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
         holder.setICheckChangeListener(new ICheckChangeListener() {
             @Override
             public void onItemChecked(int position, boolean value) {
+                Log.i("adam", "onBindViewHolder.onItemChecked called");
                 mApps.get(position).setBlacklisted(value);
-                mAppViewModel.insert(mApps.get(position));
             }
         });
 
 
-//        holder.appToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//
-//                if (isChecked) {
-//                    Log.i("adam", "toggle has been checked");
-//                    current.setBlacklisted(true);
-////                    EdumaiteRepository er = new EdumaiteRepository(parentApp).insert(current);
-//
-//                } else {
-//                    Log.i("adam", "toggle has been unchecked");
-//                    current.setBlacklisted(false);
-//
-//                }
-//
-//                //current.
-//
-//            }
-//        });
     }
 
     public void setApps(List<App> apps){
