@@ -7,6 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -17,15 +25,12 @@ import android.view.ViewGroup;
  * Use the {@link BroadcastFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BroadcastFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class BroadcastFragment extends Fragment implements View.OnClickListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+    private Spinner spinner;
+
+    private static final String[] classes = {"Physics Set 1", "Chemistry Set 1", "Physics Set 2", "BioScience Set 3"};
 
     private OnFragmentInteractionListener mListener;
 
@@ -33,38 +38,34 @@ public class BroadcastFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BroadcastFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static BroadcastFragment newInstance(String param1, String param2) {
         BroadcastFragment fragment = new BroadcastFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View v = inflater.inflate(R.layout.fragment_broadcast, container, false);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_broadcast, container, false);
+        spinner = (Spinner)v.findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,classes);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        Button t = (Button) v.findViewById(R.id.broadcast_submit);
+        t.setOnClickListener(this);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -89,6 +90,18 @@ public class BroadcastFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        EditText message = (EditText)getActivity().findViewById(R.id.broadcast_message);
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(message != null) message.setText("");
+        Toast.makeText(getContext(), "Broadcast message sent!", Toast.LENGTH_LONG).show();
     }
 
     /**

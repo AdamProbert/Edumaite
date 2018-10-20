@@ -1,14 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BroadcastFragment">
+    android:background="@color/Snow"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="0dp"
+        android:text="Broadcast"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/textPrimary"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
 
-</FrameLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/Snow"
+        android:orientation="vertical"
+        android:paddingBottom="50dp"
+        android:paddingEnd="15dp"
+        android:paddingStart="15dp"
+        android:paddingTop="50dp">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingEnd="20dp"
+                android:text="Class:" />
+
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/broadcast_message"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:breakStrategy="balanced"
+            android:fitsSystemWindows="true"
+            android:gravity="top"
+            android:hint="Your Message"
+            android:inputType="textMultiLine"
+            android:padding="5dp"
+            android:singleLine="false" />
+
+        <Button
+            android:id="@+id/broadcast_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimaryDark"
+            android:elevation="4dp"
+            android:paddingLeft="70dp"
+            android:paddingRight="70dp"
+            android:text="Send"
+            android:textColor="@color/textPrimary" />
+    </LinearLayout>
+</LinearLayout>

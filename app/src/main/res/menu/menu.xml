@@ -15,7 +15,7 @@
             <item
                 android:id="@+id/students"
                 android:icon="@drawable/baseline_group_24"
-                android:title="Students" />
+                android:title="Attendance" />
             <item
                 android:id="@+id/broadcast"
                 android:icon="@drawable/baseline_record_voice_over_24"
