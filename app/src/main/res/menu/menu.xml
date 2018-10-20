@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/shared">
+
+        <item
+            android:id="@+id/user"
+            android:icon="@drawable/twotone_face_24"
+            android:title="User selection" />
+
+        <group android:id="@+id/teacher_group">
+
+            <item
+                android:id="@+id/students"
+                android:icon="@drawable/baseline_group_24"
+                android:title="Students" />
+            <item
+                android:id="@+id/broadcast"
+                android:icon="@drawable/baseline_record_voice_over_24"
+                android:title="Broadcast" />
+            <item
+                android:id="@+id/homework"
+                android:icon="@drawable/baseline_work_outline_24"
+                android:title="Homework" />
+            <item
+                android:id="@+id/polls"
+                android:icon="@drawable/baseline_poll_24"
+                android:title="Polls" />
+
+            <item
+                android:id="@+id/apps"
+                android:icon="@drawable/baseline_poll_24"
+                android:title="Block apps" />
+        </group>
+
+        <group android:id="@+id/student_group">
+
+            <item
+                android:id="@+id/so2"
+                android:icon="@drawable/baseline_group_24"
+                android:title="Student option 2" />
+            <item
+                android:id="@+id/so3"
+                android:icon="@drawable/baseline_record_voice_over_24"
+                android:title="Student option 3" />
+            <item
+                android:id="@+id/so4"
+                android:icon="@drawable/baseline_work_outline_24"
+                android:title="Student option 4" />
+            <item
+                android:id="@+id/so5"
+                android:icon="@drawable/baseline_poll_24"
+                android:title="Student option 5" />
+        </group>
+    </group>
+
+</menu>

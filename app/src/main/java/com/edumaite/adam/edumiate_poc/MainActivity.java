@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,13 +13,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,29 +27,32 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.edumaite.adam.edumiate_poc.dataCollection.AppCollector;
-import com.edumaite.adam.edumiate_poc.db.AppDao;
 import com.edumaite.adam.edumiate_poc.db.AppViewModel;
 import com.edumaite.adam.edumiate_poc.db.EdumaiteDB;
-import com.edumaite.adam.edumiate_poc.db.EdumaiteRepository;
 import com.edumaite.adam.edumiate_poc.models.App;
 import com.edumaite.adam.edumiate_poc.receivers.NetworkChangeReceiver;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements
         TestFragment2.OnFragmentInteractionListener,
-        TestFragment1.OnFragmentInteractionListener,
-        FToggleFragment.OnFragmentInteractionListener {
+        UserSelectionFragment.OnFragmentInteractionListener,
+        AppListFragment.OnFragmentInteractionListener,
+        TeacherSplash.OnFragmentInteractionListener,
+        StudentSplash.OnFragmentInteractionListener,
+        BroadcastFragment.OnFragmentInteractionListener,
+        HomeworkFragment.OnFragmentInteractionListener,
+        PollsFragment.OnFragmentInteractionListener,
+        StudentsFragment.OnFragmentInteractionListener{
 
     private Context context;
     private DrawerLayout mDrawerLayout;
@@ -59,38 +64,54 @@ public class MainActivity extends AppCompatActivity implements
     private Timer timer;
     private TimerTask timerTask;
     private Handler handler = new Handler();
+    private AppViewModel avm;
+
+    public String user = null;
+
+    NavigationView navigationView = null;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Edumaite");
-        setSupportActionBar(toolbar);
+        setTitle("Edumaite");
 
         ActionBar actionbar = getSupportActionBar();
 
         Fragment fragment = null;
         Class fragmentClass;
-        fragmentClass = TestFragment1.class;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        if(user == null) {
+            fragmentClass = UserSelectionFragment.class;
+        }
+        else if(user == "teacher"){
+            fragmentClass = TeacherSplash.class;
+        }
+        else if(user == "student"){
+            fragmentClass = StudentSplash.class;
+        }
+        else{
+            Log.i("adam", "Issue initialising splash fragment based on user." +
+                    "setting UserSelectionFragment as default");
+            fragmentClass=UserSelectionFragment.class;
+
+        }
+        // Set which fragment to yse
+        replaceFragments(fragmentClass);
+
+        // Sets the correct view for the siderbar based on the current user selected
+        navigationView = findViewById(R.id.menu_view);
+        changeUserView();
 
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setCheckedItem(R.id.bot);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -102,23 +123,24 @@ public class MainActivity extends AppCompatActivity implements
                         int id = item.getItemId();
                         Fragment fragment = null;
                         Class fragmentClass = null;
-                        if (id == R.id.bot) {
-                            fragmentClass = TestFragment1.class;
-                        } else if (id == R.id.yoda) {
-                            fragmentClass = TestFragment2.class;
-                        } else if (id == R.id.vader) {
-                            fragmentClass = FToggleFragment.class;
+                        if (id == R.id.user) {
+                            fragmentClass = UserSelectionFragment.class;
+                        } else if(id== R.id.apps){
+                            fragmentClass = AppListFragment.class;
+                        } else if (id == R.id.broadcast) {
+                            fragmentClass = BroadcastFragment.class;
+                        } else if (id == R.id.homework) {
+                            fragmentClass = HomeworkFragment.class;
+                        } else if (id == R.id.polls) {
+                            fragmentClass = PollsFragment.class;
+                        } else if (id == R.id.students) {
+                            fragmentClass = StudentsFragment.class;
                         } else {
                             return true;
                         }
 
-                        try {
-                            fragment = (Fragment) fragmentClass.newInstance();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        // Switch fragments
+                        replaceFragments(fragmentClass);
 
                         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                         drawer.closeDrawer(GravityCompat.START);
@@ -126,34 +148,14 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 });
 
-        context = this;
-
-        // Try something like this to speed it up: https://virtuooza.com/add-data-to-sqlite-room-and-display-it-into-recyclerview/
-//        Runnable r = new Runnable(){
-//            @Override
-//            public void run() {
-//                items = db.databaseInterface().getAllItems();
-//                recyclerView= (RecyclerView)findViewById(R.id.recyclerview);
-//                recyclerView.setLayoutManager(new LinearLayoutManager(getApplication()));
-//                adapter= new UserAdapter(items);
-//                adapter.notifyDataSetChanged();
-//                recyclerView.setAdapter(adapter);
-//
-//            }
-//        };
-//
-//        Thread newThread= new Thread(r);
-//        newThread.start();
-
-
         //Initialise DB with installed apps
         // This needs to only be run once! As it will overwrite the previous entries!
-//        List<App> apps = new AppCollector(context).getInstalledApps();
-//        EdumaiteDB db = Room.databaseBuilder(this, EdumaiteDB.class, "edumaite_db")
-//                .build();
-//
-//
-//        AppViewModel avm = new AppViewModel(getApplication());
+        List<App> apps = new AppCollector(context).getInstalledApps();
+        EdumaiteDB db = Room.databaseBuilder(this, EdumaiteDB.class, "edumaite_db")
+                .build();
+
+
+        avm = new AppViewModel(getApplication());
 //        for(App app: apps) {
 //            avm.insert(app);
 //
@@ -163,13 +165,66 @@ public class MainActivity extends AppCompatActivity implements
         mNetworkReceiver = new NetworkChangeReceiver(new Handler());
         registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
+        AppViewModel mAppViewModel;
+        mAppViewModel = ViewModelProviders.of(this).get(AppViewModel.class);
+        mAppViewModel.getAllApps().observe(this, new Observer<List<App>>() {
+            @Override
+            public void onChanged(@Nullable final List<App> apps) {
+                Log.i("adam", "ToggleFragment on changed called");
+                // Update the cached copy of the words in the adapter.
+                List<String> app_names = new ArrayList<String>();
+                for(App app : apps){
+                    if(app.blacklisted){
+                        app_names.add(app.packageName);
+                    }
+                }
+                startTimer(context, app_names);
+
+            }
+        });
         // Initialise foreground app checker
-        startTimer(context);
+        //startTimer(context);
 
     }
 
+    public void changeUserView(){
+        Toast.makeText(context, "Setting menus to " +user, Toast.LENGTH_LONG).show();
+        if(user == "student") {
+            navigationView.getMenu().setGroupVisible(R.id.student_group, true);
+            navigationView.getMenu().setGroupVisible(R.id.teacher_group, false);
+        }
+        else{
+            navigationView.getMenu().setGroupVisible(R.id.student_group, false);
+            navigationView.getMenu().setGroupVisible(R.id.teacher_group, true);
+        }
+    }
+
+    public void setTitle(String title){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(title);
+        setSupportActionBar(toolbar);
+    }
+
+    public void replaceFragments(Class fragmentClass) {
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
+                .commit();
+    }
+
+
+    // Need a better way of running this background task.
+    // Needs to be able to handle live data and ideally run when the app is closed
     //To start timer
-    private void startTimer(final Context context){
+    private void startTimer(final Context context, List<String> apps){
+
+        Log.i("adam","startTimer called with app list: " + apps);
         timer = new Timer();
         timerTask = new TimerTask() {
             public void run() {
@@ -178,8 +233,8 @@ public class MainActivity extends AppCompatActivity implements
                         String foregroundapp = getForegroundAppName(context);
                         Log.i("Adam", "Current foreground app: " + foregroundapp);
                         //Toast.makeText(context, "Current foreground app: " + foregroundapp, Toast.LENGTH_SHORT).show();
-                        if(foregroundapp.equals("com.google.android.googlequicksearchbox")){
-                            Log.i("Adam", "blacklisted app has been caught!");
+                        if(apps.contains(foregroundapp)){
+                            Log.i("Adam", foregroundapp + " app has been caught!");
                             Intent intent = new Intent(context, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                             startActivity(intent);
@@ -298,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getSupportFragmentManager().popBackStack();
+        //getSupportFragmentManager().popBackStack();
         unregisterNetworkChanges();
     }
 

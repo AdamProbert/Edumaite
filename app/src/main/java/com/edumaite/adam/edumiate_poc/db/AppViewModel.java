@@ -3,7 +3,6 @@ package com.edumaite.adam.edumiate_poc.db;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 
 import com.edumaite.adam.edumiate_poc.models.App;
 
