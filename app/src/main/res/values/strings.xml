@@ -3,20 +3,22 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string-array name="Planets">
-        <item>Sun</item>
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+    <string-array name="Students">
+        <item>Jessica Jones</item>
+        <item>James Acaster</item>
+        <item>Lucy Everet</item>
+        <item>Jonathan Smith</item>
+        <item>Miles Barkley</item>
+        <item>Julia Smart</item>
+        <item>Hannah George</item>
+        <item>Tiphony Steet</item>
     </string-array>
 
     <string name="hint_word">Word...</string>
     <string name="button_save">Save</string>
     <string name="empty_not_saved">Word not saved because it is empty.</string>
     <string name="app_blacklist_title">App Blacklist</string>
+
+
+
 </resources>
