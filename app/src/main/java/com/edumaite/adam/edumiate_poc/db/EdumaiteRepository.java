@@ -12,17 +12,20 @@ public class EdumaiteRepository {
 
     private AppDao myAppDao;
     private LiveData<List<App>> myAllApps;
+    private LiveData<List<App>> myBlacklistApps;
 
     public EdumaiteRepository(Application application){
         EdumaiteDB db = EdumaiteDB.getDatabase(application);
         myAppDao = db.appDao();
         myAllApps = myAppDao.getAllApps();
+        myBlacklistApps = myAppDao.getAllBlockedApps();
 
     }
 
     LiveData<List<App>> getAllApps() {
         return myAllApps;
     }
+    LiveData<List<App>> getMyBlacklistApps() { return myBlacklistApps; }
 
     public void insert (App app) {
         new insertAppSyncTask(myAppDao).execute(app);

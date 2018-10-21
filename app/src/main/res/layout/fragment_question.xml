@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Snow"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".QuestionFragment">
 
     <TextView
         android:layout_width="match_parent"
@@ -13,62 +13,48 @@
         android:paddingBottom="10dp"
         android:paddingEnd="10dp"
         android:paddingStart="0dp"
-        android:text="Broadcast"
+        android:text="Ask a question"
         android:textAlignment="viewEnd"
         android:textColor="@color/textPrimary"
         android:textSize="20sp"
         android:layout_marginBottom="20dp"/>
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Snow"
         android:orientation="vertical"
         android:paddingBottom="50dp"
         android:paddingEnd="15dp"
         android:paddingStart="15dp"
         android:paddingTop="50dp">
 
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="50dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingEnd="20dp"
-                android:text="Class:" />
-
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
+        <TextView
+        android:id="@+id/Teacher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textPrimary"
+        android:textSize="16sp"
+        android:text="Message for Miss Anderson:"
+            />
 
         <EditText
-            android:id="@+id/broadcast_message"
+            android:id="@+id/question_text"
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="60dp"
             android:backgroundTint="@color/colorPrimaryDark"
-            android:breakStrategy="balanced"
             android:fitsSystemWindows="true"
             android:gravity="top"
-            android:hint="Your Message"
+            android:hint="Question"
             android:inputType="textMultiLine"
-            android:padding="5dp"
-            android:singleLine="false" />
+            android:singleLine="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@color/Snow"
+            android:textColorHint="@color/colorPrimaryDark" />
 
         <Button
-            android:id="@+id/broadcast_submit"
+            android:id="@+id/question_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -78,6 +64,6 @@
             android:paddingRight="70dp"
             android:text="Send"
             android:textColor="@color/textPrimary" />
-    </LinearLayout>
 
+    </LinearLayout>
 </LinearLayout>

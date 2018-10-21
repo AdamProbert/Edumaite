@@ -29,6 +29,8 @@ public class AppListFragment extends Fragment{
     private AppAdapter mAppAdapter;
     private static Application app;
     private static Context context;
+    private static MainActivity activity;
+
 
     public AppListFragment() {
         // Required empty public constructor
@@ -46,10 +48,19 @@ public class AppListFragment extends Fragment{
 
     }
 
+    // Remove app toggle if student is accessing blocker apps
+//    @Override
+//    public void onViewCreated(View view, Bundle savedInstanceState){
+//        if(activity.user == "student"){
+//            view.findViewById(R.id.app_switch).setVisibility(View.GONE);
+//        }
+//    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = (MainActivity) getActivity();
         context = getActivity();
 
 
@@ -66,21 +77,33 @@ public class AppListFragment extends Fragment{
         mAppViewModel = ViewModelProviders.of(this).get(AppViewModel.class);
 
         Application app = getActivity().getApplication();
-        mAppAdapter = new AppAdapter(getContext(), mAppViewModel);
+        mAppAdapter = new AppAdapter(getContext(), mAppViewModel, activity.user);
 
         recyclerView.setAdapter(mAppAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        mAppViewModel.getAllApps().observe(this, new Observer<List<App>>() {
-            @Override
-            public void onChanged(@Nullable final List<App> apps) {
-                Log.i("adam", "ToggleFragment on changed called");
-                // Update the cached copy of the words in the adapter.
-                mAppAdapter.setApps(apps);
+        // Handle teacher/student apps in if statement. Different applist and dont show toggles
+        if(activity.user == "teacher") {
+            mAppViewModel.getAllApps().observe(this, new Observer<List<App>>() {
+                @Override
+                public void onChanged(@Nullable final List<App> apps) {
+                    Log.i("adam", "ToggleFragment on changed called");
+                    // Update the cached copy of the words in the adapter.
+                    mAppAdapter.setApps(apps);
 
-            }
-        });
+                }
+            });
+        } else {
+            mAppViewModel.getAllBlockedApps().observe(this, new Observer<List<App>>() {
+                @Override
+                public void onChanged(@Nullable final List<App> apps) {
+                    Log.i("adam", "ToggleFragment on changed called");
+                    // Update the cached copy of the words in the adapter.
+                    mAppAdapter.setApps(apps);
+                }
+            });
+        }
 
         return fragView;
     }
@@ -102,11 +125,14 @@ public class AppListFragment extends Fragment{
         super.onDetach();
         //        mListener = null;
         List<App> apps2 = mAppAdapter.getApps();
-        for(App app: apps2) {
-            mAppViewModel.insert(app);
+        if(apps2 != null) {
+            for (App app : apps2) {
+                mAppViewModel.insert(app);
 
+            }
+            mAppAdapter.notifyDataSetChanged();
         }
-        mAppAdapter.notifyDataSetChanged();
+
     }
 
     @Override

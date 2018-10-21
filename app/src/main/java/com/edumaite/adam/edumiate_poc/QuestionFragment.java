@@ -1,6 +1,8 @@
 package com.edumaite.adam.edumiate_poc;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,30 +12,35 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
 
-public class BroadcastFragment extends Fragment implements View.OnClickListener {
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link QuestionFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link QuestionFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class QuestionFragment extends Fragment implements View.OnClickListener {
 
-
-    private Spinner spinner;
-
-    private static final String[] classes = {"Physics Set 1", "Chemistry Set 1", "Physics Set 2", "BioScience Set 3"};
 
     private OnFragmentInteractionListener mListener;
 
-    public BroadcastFragment() {
+    public QuestionFragment() {
         // Required empty public constructor
     }
 
 
-    public static BroadcastFragment newInstance(String param1, String param2) {
-        BroadcastFragment fragment = new BroadcastFragment();
-
+    // TODO: Rename and change types and number of parameters
+    public static QuestionFragment newInstance(String param1, String param2) {
+        QuestionFragment fragment = new QuestionFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -46,16 +53,12 @@ public class BroadcastFragment extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.fragment_broadcast, container, false);
+        View v = inflater.inflate(R.layout.fragment_question, container, false);
         // Inflate the layout for this fragment
-        spinner = (Spinner)v.findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,classes);
+        EditText et = (EditText) v.findViewById(R.id.question_text);
+        et.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        Button t = (Button) v.findViewById(R.id.broadcast_submit);
+        Button t = (Button) v.findViewById(R.id.question_submit);
         t.setOnClickListener(this);
         return v;
     }
@@ -86,15 +89,16 @@ public class BroadcastFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        EditText message = (EditText)getActivity().findViewById(R.id.broadcast_message);
+        EditText message = (EditText)getActivity().findViewById(R.id.question_text);
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if(message != null) message.setText("");
-        Toast.makeText(getContext(), "Broadcast message sent!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Question sent", Toast.LENGTH_LONG).show();
     }
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

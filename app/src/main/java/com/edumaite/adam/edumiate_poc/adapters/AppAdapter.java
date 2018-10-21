@@ -1,5 +1,6 @@
 package com.edumaite.adam.edumiate_poc.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.edumaite.adam.edumiate_poc.MainActivity;
 import com.edumaite.adam.edumiate_poc.R;
 import com.edumaite.adam.edumiate_poc.db.AppViewModel;
 import com.edumaite.adam.edumiate_poc.models.App;
@@ -25,11 +27,13 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     private final LayoutInflater mInflater;
     private List<App> mApps; // Cached copy of words
     public AppViewModel mAppViewModel;
+    public String user;
 
-    public AppAdapter(Context context, AppViewModel mAppViewModel) {
+    public AppAdapter(Context context, AppViewModel mAppViewModel, String user) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
         this.mAppViewModel = mAppViewModel;
+        this.user = user;
 
     }
 
@@ -51,17 +55,22 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
             appToggle = itemView.findViewById(R.id.app_switch);
             wordItemView = itemView.findViewById(R.id.app_name);
 
-            appToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Log.i("adam", "onCheckChanged call. Vars: " + buttonView + ", " +isChecked);
-                    if(iCheckChangeListener != null){
-                        iCheckChangeListener.onItemChecked(getAdapterPosition(), isChecked);
+            if(user == "student"){
+                appToggle.setVisibility(View.INVISIBLE);
+            } else {
+
+                appToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        Log.i("adam", "onCheckChanged call. Vars: " + buttonView + ", " + isChecked);
+                        if (iCheckChangeListener != null) {
+                            iCheckChangeListener.onItemChecked(getAdapterPosition(), isChecked);
+                        }
+
+
                     }
-
-
-                }
-            });
+                });
+            }
         }
 
         void setICheckChangeListener(ICheckChangeListener iCheckChangeListener) {

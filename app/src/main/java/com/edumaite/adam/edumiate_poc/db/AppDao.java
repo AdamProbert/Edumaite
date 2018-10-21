@@ -22,6 +22,10 @@ public interface AppDao {
 
     @Query("SELECT * from apps ORDER BY name ASC")
     LiveData<List<App>> getAllApps();
+
+    @Query("select * from apps where blacklisted order by name asc")
+    LiveData<List<App>> getAllBlockedApps();
+
 }
 
 

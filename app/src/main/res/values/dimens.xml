@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="small_padding">6dp</dimen>
     <dimen name="big_padding">16dp</dimen>
 </resources>
+

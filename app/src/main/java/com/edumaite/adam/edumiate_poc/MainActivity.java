@@ -44,7 +44,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements
-        TestFragment2.OnFragmentInteractionListener,
         UserSelectionFragment.OnFragmentInteractionListener,
         AppListFragment.OnFragmentInteractionListener,
         TeacherSplash.OnFragmentInteractionListener,
@@ -52,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements
         BroadcastFragment.OnFragmentInteractionListener,
         HomeworkFragment.OnFragmentInteractionListener,
         PollsFragment.OnFragmentInteractionListener,
-        StudentsFragment.OnFragmentInteractionListener{
+        StudentsFragment.OnFragmentInteractionListener,
+        QuestionFragment.OnFragmentInteractionListener{
 
     private Context context;
     private DrawerLayout mDrawerLayout;
@@ -135,6 +135,12 @@ public class MainActivity extends AppCompatActivity implements
                             fragmentClass = PollsFragment.class;
                         } else if (id == R.id.students) {
                             fragmentClass = StudentsFragment.class;
+                        } else if (id == R.id.question) {
+                            fragmentClass = QuestionFragment.class;
+                        } else if (id == R.id.blocked_apps) {
+                            fragmentClass = AppListFragment.class;
+//                        } else if (id == R.id.question) {
+//                            fragmentClass = QuestionFragment.class;
                         } else {
                             return true;
                         }
