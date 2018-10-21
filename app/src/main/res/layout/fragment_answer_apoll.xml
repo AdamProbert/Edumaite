@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Snow"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="0dp"
+        android:text="Answer a poll"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/textPrimary"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/Snow"
+        android:orientation="vertical"
+        android:paddingBottom="50dp"
+        android:paddingEnd="15dp"
+        android:paddingStart="15dp"
+        android:paddingTop="50dp">
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -20,5 +20,9 @@
     <string name="empty_not_saved">Word not saved because it is empty.</string>
     <string name="app_blacklist_title">App Blacklist</string>
 
+    <string name="title_activity_blocked_app">BlockedAppActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 
 </resources>

@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements
         HomeworkFragment.OnFragmentInteractionListener,
         PollsFragment.OnFragmentInteractionListener,
         StudentsFragment.OnFragmentInteractionListener,
-        QuestionFragment.OnFragmentInteractionListener{
+        QuestionFragment.OnFragmentInteractionListener,
+        AnswerAPollFragment.OnFragmentInteractionListener{
 
     private Context context;
     private DrawerLayout mDrawerLayout;
@@ -139,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements
                             fragmentClass = QuestionFragment.class;
                         } else if (id == R.id.blocked_apps) {
                             fragmentClass = AppListFragment.class;
-//                        } else if (id == R.id.question) {
-//                            fragmentClass = QuestionFragment.class;
+                        } else if (id == R.id.answer_poll) {
+                            fragmentClass = AnswerAPollFragment.class;
                         } else {
                             return true;
                         }
@@ -241,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements
                         //Toast.makeText(context, "Current foreground app: " + foregroundapp, Toast.LENGTH_SHORT).show();
                         if(apps.contains(foregroundapp)){
                             Log.i("Adam", foregroundapp + " app has been caught!");
-                            Intent intent = new Intent(context, MainActivity.class);
+                            Intent intent = new Intent(context, BlockedAppActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                             startActivity(intent);
                             Log.i("Adam", "Activity should have relaunched!");
